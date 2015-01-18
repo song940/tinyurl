@@ -1,0 +1,33 @@
+doctype html
+html(lang='en')
+  head
+    title tinyurl
+    meta(name="viewport", content="width=device-width")
+    style.
+      .container{
+        width: 20%;
+        margin: auto;
+        text-align: center;
+      }
+      input, button{
+        border: none;
+        width: 100%;
+        padding: 5px 0;
+        outline: 0;
+        display: block;
+        margin: 10px auto;
+        border-bottom: 1px solid #ccc;
+      }
+      button{
+        color: white;
+        cursor: pointer;
+        background: black;
+      }
+      @media screen and (max-width: 768px){
+        .container{
+          width: 80%;
+        }
+      }
+  body
+    .container
+      block content

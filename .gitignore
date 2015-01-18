@@ -1,6 +1,8 @@
 .DS_*
-node_modules
 *.sublime*
+*.log
+
 psd
 thumb
-*.log
+tinyurl
+node_modules

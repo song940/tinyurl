@@ -1,81 +1,34 @@
-## api-tinyurl ![npm](https://badge.fury.io/js/api-tinyurl.png)
+## tinyurl ![npm](https://badge.fury.io/js/tinyurl.png)
 
-
+shorten that long URL into a tiny URL
 
 ### Installation
-````
-$ [sudo] npm install api-tinyurl
+
+````bash
+~$ git clone https://github.com/lsongorg/tinyurl.git
+~$ cd tinyurl
+~$ npm install
+~$ npm run start
 ````
 
 
 ### Example
-````javascript
-var api-tinyurl = require('api-tinyurl');
-````
+
+```bash
+~$ curl -i \
+        -X POST \
+        -H 'Content-Type: application/json'  \
+        -d '{ "url" : "https://lsong.org" }' \
+        https://api.lsong.org/tinyurl
+```
 
 ### API
 
-- api-tinyurl.init()
-- api-tinyurl.defaultConfiguration()
-- api-tinyurl.lazyrouter()
-- api-tinyurl.handle()
-- api-tinyurl.use()
-- api-tinyurl.route()
-- api-tinyurl.engine()
-- api-tinyurl.param()
-- api-tinyurl.set()
-- api-tinyurl.path()
-- api-tinyurl.enabled()
-- api-tinyurl.disabled()
-- api-tinyurl.enable()
-- api-tinyurl.disable()
-- api-tinyurl.get()
-- api-tinyurl.post()
-- api-tinyurl.put()
-- api-tinyurl.head()
-- api-tinyurl.delete()
-- api-tinyurl.options()
-- api-tinyurl.trace()
-- api-tinyurl.copy()
-- api-tinyurl.lock()
-- api-tinyurl.mkcol()
-- api-tinyurl.move()
-- api-tinyurl.purge()
-- api-tinyurl.propfind()
-- api-tinyurl.proppatch()
-- api-tinyurl.unlock()
-- api-tinyurl.report()
-- api-tinyurl.mkactivity()
-- api-tinyurl.checkout()
-- api-tinyurl.merge()
-- api-tinyurl.m-search()
-- api-tinyurl.notify()
-- api-tinyurl.subscribe()
-- api-tinyurl.unsubscribe()
-- api-tinyurl.patch()
-- api-tinyurl.search()
-- api-tinyurl.connect()
-- api-tinyurl.all()
-- api-tinyurl.del()
-- api-tinyurl.render()
-- api-tinyurl.listen()
-- api-tinyurl.setMaxListeners()
-- api-tinyurl.emit()
-- api-tinyurl.addListener()
-- api-tinyurl.on()
-- api-tinyurl.once()
-- api-tinyurl.removeListener()
-- api-tinyurl.removeAllListeners()
-- api-tinyurl.listeners()
-- api-tinyurl.request()
-- api-tinyurl.response()
-- api-tinyurl.cache()
-- api-tinyurl.settings()
-- api-tinyurl.engines()
-- api-tinyurl._events()
-- api-tinyurl.locals()
-- api-tinyurl.mountpath()
-- api-tinyurl._router()
++ GET /{alias}
++ GET /?alias={alias}
++ POST /
++ POST /{alias}
+
 
 ### Contributing
 - Fork this repo
