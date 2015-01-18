@@ -1,14 +1,30 @@
 {
-  "name": "api-tinyurl",
+  "name": "tinyurl",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "author": "lsong",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.10.1",
+    "body-parser": "latest",
     "express": "latest",
-    "hiredis": "^0.1.17",
-    "redis": "^0.12.1"
-  }
+    "hiredis": "latest",
+    "jade": "latest",
+    "redis": "latest"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lsongorg/tinyurl.git"
+  },
+  "keywords": [
+    "tiny",
+    "url"
+  ],
+  "bugs": {
+    "url": "https://github.com/lsongorg/tinyurl/issues"
+  },
+  "homepage": "https://github.com/lsongorg/tinyurl"
 }
