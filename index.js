@@ -35,8 +35,7 @@ var gen = function(name, callback){
 app.get('/:alias?', function(req, res){
   var alias = req.params[ 'alias' ] || req.query[ 'alias' ];
   db.get(alias, function(err, url){
-    if(err && err.notFound)     return res.render('index');
-    if(err)                     return res.status(500).send(err.type);
+    if(err)                     return res.render('index');
     if(req.query.alias  && url) return res.send(url);
     res.redirect(url);
   });
