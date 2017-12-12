@@ -37,8 +37,7 @@ app.use(route('get', '/:alias?', async (req, res) => {
     const url = await db.get(alias);
     if(url) return res.redirect(url);
   } catch(e) {
-    if(e.notFound) return res.send(404);
-    res.status(500).end(e.toString());
+    res.status(e.notFound ? 404 : 500).send(e.toString());
   }
 }));
 
