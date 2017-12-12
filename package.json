@@ -1,17 +1,19 @@
 {
   "name": "tinyurl",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "author": "lsong",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "latest",
-    "express": "latest",
-    "jade": "latest",
+    "kelp": "^1.0.5",
+    "kelp-body": "^1.4.1",
+    "kelp-logger": "^1.1.0",
+    "kelp-route": "^2.0.0",
+    "kelp-send": "^1.0.3",
     "level": "latest"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node ."
   },
   "devDependencies": {},
   "repository": {

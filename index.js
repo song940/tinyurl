@@ -1,24 +1,14 @@
-var crypto      = require('crypto');
-var level       = require("level");
-var express     = require('express');
-var bodyParser  = require('body-parser');
+const crypto = require('crypto');
+const level  = require("level");
+const http   = require('http');
+const kelp   = require('kelp');
+const body   = require('kelp-body');
+const send   = require('kelp-send');
+const route  = require('kelp-route');
+const logger = require('kelp-logger');
 
-var db  = level('tinyurl');
-
-var app = express();
-
-app.set('view engine', 'jade');
-app.set('views', __dirname + '/views');
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-/**
- * [function description]
- * @param  {[type]}   name     [description]
- * @param  {Function} callback [description]
- * @return {[type]}            [description]
- */
-var gen = function(name, callback){
+const db  = level('tinyurl');
+const gen = async name => {
   if(!name){
     name = new Buffer(crypto.randomBytes(5))
     .toString('base64')
@@ -26,33 +16,92 @@ var gen = function(name, callback){
     .replace(/\//g, '')
     .replace(/=+$/, '');
   }
-  db.get(name, function(err){
-    if(err && err.notFound) return callback(name);
-    if(err) gen(null, callback);
-  });
+  try{
+    await db.get(name);
+    return await gen(name);
+  }catch(e){
+    if(e.notFound) return name;
+  }
 };
 
-app.get('/:alias?', function(req, res){
-  var alias = req.params[ 'alias' ] || req.query[ 'alias' ];
-  db.get(alias, function(err, url){
-    if(err)                     return res.render('index');
-    if(req.query.alias  && url) return res.send(url);
-    res.redirect(url);
-  });
+const app = kelp();
+
+app.use(send);
+app.use(body);
+app.use(logger);
+
+app.use(route('get', '/:alias?', async (req, res) => {
+  const { alias = req.query.alias } = req.params;
+  if(!alias) return res.send(await render(req));
+  try{
+    const url = await db.get(alias);
+    if(url) return res.redirect(url);
+  } catch(e) {
+    res.status(500).end(e.toString());
+  }
+}));
+
+app.use(route('post', '/:alias?', async (req, res) => {
+  let { url, alias = req.params.alias } = req.body || req.query;
+  if(!url) return res.status(500).send('url is required');
+  try{
+    alias = await gen(alias);
+    await db.put(alias, url);
+    return res.send({ alias, url });
+  }catch(e){
+    res.status(500).send(e.toString());
+  }
+}));
+
+app.use((req, res) => res.send(404));
+const server = http.createServer(app);
+server.listen(9000, (err) => {
+  console.log('server is running at %s', server.address().port);
 });
 
-app.post('/:alias?', function(req, res){
-  var url   = req.body[ 'url' ];
-  var alias = req.params[ 'alias' ] || req.query['alias'] || req.body[ 'alias' ];
-  gen(alias, function(alias){
-    db.put(alias, url, function(err){
-      if(err) return res.status(500).send(err);
-      res.json({
-        alias : alias,
-        url   : url
-      });
-    });
-  });
-});
-
-module.exports = app;
+const render = async props => {
+  return `
+  <!doctype html>
+  <html>
+  <head>
+  <style>
+  .container{
+    width: 20%;
+    margin: auto;
+    text-align: center;
+  }
+  input, button{
+    border: none;
+    width: 100%;
+    padding: 5px 0;
+    outline: 0;
+    display: block;
+    margin: 10px auto;
+    border-bottom: 1px solid #ccc;
+  }
+  button{
+    color: white;
+    cursor: pointer;
+    background: black;
+  }
+  @media screen and (max-width: 768px){
+    .container{
+      width: 80%;
+    }
+  }
+  </style>
+  </head>
+  <body class="container" >
+    <h1>Tiny URL</h1>
+    <form action="" method="post" >
+      <p>Enter a long URL to make tiny:</p>
+      <input name="url" type="url" placeholder="url" required />
+      <input name="alias", placeholder="alias (optional)" />
+      <button type="submit" >submit</button>
+    </form>
+    <footer>
+      <p>&copy; 2017 LSONG.ORG</p>
+    </footer>
+  </body>
+  </html>`;
+};
