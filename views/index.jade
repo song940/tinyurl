@@ -1,9 +1,0 @@
-extends layouts/layout.jade
-
-block content
-  h1 TinyURL
-  form(action, method='post')
-    p Enter a long URL to make tiny:
-    input(name='url', required, type='url', placeholder='url')
-    input(name='alias', placeholder='alias (optional)')
-    button(type='submit') submit

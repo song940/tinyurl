@@ -33,10 +33,11 @@ app.use(logger);
 app.use(route('get', '/:alias?', async (req, res) => {
   const { alias = req.query.alias } = req.params;
   if(!alias) return res.send(await render(req));
-  try{
+  try {
     const url = await db.get(alias);
     if(url) return res.redirect(url);
   } catch(e) {
+    if(e.notFound) return res.send(404);
     res.status(500).end(e.toString());
   }
 }));
@@ -44,11 +45,11 @@ app.use(route('get', '/:alias?', async (req, res) => {
 app.use(route('post', '/:alias?', async (req, res) => {
   let { url, alias = req.params.alias } = req.body || req.query;
   if(!url) return res.status(500).send('url is required');
-  try{
+  try {
     alias = await gen(alias);
     await db.put(alias, url);
     return res.send({ alias, url });
-  }catch(e){
+  } catch(e) {
     res.status(500).send(e.toString());
   }
 }));
@@ -62,8 +63,10 @@ server.listen(9000, (err) => {
 const render = async props => {
   return `
   <!doctype html>
-  <html>
+  <html lang="en" >
   <head>
+  <title>TinyURL</title>
+  <meta name="viewport" content="width=device-width" />
   <style>
   .container{
     width: 20%;
