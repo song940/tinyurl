@@ -31,7 +31,9 @@ app.use(body);
 app.use(logger);
 
 app.use(route('get', '/:alias?', async (req, res) => {
-  const { alias = req.query.alias } = req.params;
+  const { alias } = Object.assign({
+    // alias
+  }, req.params, req.body, req.query);
   if(!alias) return res.send(await render(req));
   try {
     const url = await db.get(alias);
