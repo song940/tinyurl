@@ -4,7 +4,7 @@ const http   = require('http');
 const kelp   = require('kelp');
 const body   = require('kelp-body');
 const send   = require('kelp-send');
-const route  = require('kelp-route');
+const Router  = require('kelp-router');
 const logger = require('kelp-logger');
 
 const db  = level('tinyurl');
@@ -30,7 +30,10 @@ app.use(send);
 app.use(body);
 app.use(logger);
 
-app.use(route('get', '/:alias?', async (req, res) => {
+const router = new Router();
+
+
+app.use(router.route('get', '/:alias?', async (req, res) => {
   const { alias } = Object.assign({
     // alias
   }, req.params, req.body, req.query);
@@ -43,7 +46,7 @@ app.use(route('get', '/:alias?', async (req, res) => {
   }
 }));
 
-app.use(route('post', '/:alias?', async (req, res) => {
+app.use(router.route('post', '/:alias?', async (req, res) => {
   let { url, alias = req.params.alias } = req.body || req.query;
   if(!url) return res.status(500).send('url is required');
   try {

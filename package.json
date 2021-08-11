@@ -8,7 +8,7 @@
     "kelp": "^1.0.5",
     "kelp-body": "^1.4.1",
     "kelp-logger": "^1.1.0",
-    "kelp-route": "^2.0.0",
+    "kelp-router": "latest",
     "kelp-send": "^1.0.3",
     "level": "latest"
   },
