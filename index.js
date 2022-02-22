@@ -1,26 +1,26 @@
 const crypto = require('crypto');
-const level  = require("level");
-const http   = require('http');
-const kelp   = require('kelp');
-const body   = require('kelp-body');
-const send   = require('kelp-send');
-const Router  = require('kelp-router');
+const level = require("level");
+const http = require('http');
+const kelp = require('kelp');
+const body = require('kelp-body');
+const send = require('kelp-send');
+const Router = require('kelp-router');
 const logger = require('kelp-logger');
 
-const db  = level('tinyurl');
+const db = level('tinyurl');
 const gen = async name => {
-  if(!name){
-    name = new Buffer(crypto.randomBytes(5))
-    .toString('base64')
-    .replace(/\+/g, '')
-    .replace(/\//g, '')
-    .replace(/=+$/, '');
+  if (!name) {
+    name = Buffer.from(crypto.randomBytes(5))
+      .toString('base64')
+      .replace(/\+/g, '')
+      .replace(/\//g, '')
+      .replace(/=+$/, '');
   }
-  try{
+  try {
     await db.get(name);
     return await gen(name);
-  }catch(e){
-    if(e.notFound) return name;
+  } catch (e) {
+    if (e.notFound) return name;
   }
 };
 
@@ -37,23 +37,23 @@ app.use(router.route('get', '/:alias?', async (req, res) => {
   const { alias } = Object.assign({
     // alias
   }, req.params, req.body, req.query);
-  if(!alias) return res.send(await render(req));
+  if (!alias) return res.send(await render(req));
   try {
     const url = await db.get(alias);
-    if(url) return res.redirect(url);
-  } catch(e) {
+    if (url) return res.redirect(url);
+  } catch (e) {
     res.status(e.notFound ? 404 : 500).send(e.toString());
   }
 }));
 
 app.use(router.route('post', '/:alias?', async (req, res) => {
   let { url, alias = req.params.alias } = req.body || req.query;
-  if(!url) return res.status(500).send('url is required');
+  if (!url) return res.status(500).send('url is required');
   try {
     alias = await gen(alias);
     await db.put(alias, url);
     return res.send({ alias, url });
-  } catch(e) {
+  } catch (e) {
     res.status(500).send(e.toString());
   }
 }));
